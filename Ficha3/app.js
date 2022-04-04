@@ -20,5 +20,10 @@ function perfomedDownload(started_fn, update_fn, completed_fn){
 
 // perfomedDownload (started, update, completed);
 
-var array = [6, 2, 3];
-console.log(arrayUtils.average(array));
+var array = [7, 2, 3, 5, 8, 10, 11];
+var value = 5;
+var a1 =  [7, 2, 3, 5 ];
+var a2 =  [7, 2, 3, 5];
+var index1 = 1;
+var index2 = 3;
+console.log(arrayUtils.contains(array, value));
