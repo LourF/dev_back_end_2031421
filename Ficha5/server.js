@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : false}));
 
-var fs = require('fs')
+var fs = require('fs');
+const { response } = require('express');
 
    function readFile(fileName){
        var file = fs.readFileSync(fileName, 'utf-8');
@@ -18,36 +19,56 @@ app.get('/', (req, res) => {
   res.send('hello ')
 })
 
+app.get('/users', (req, res) => {
+  res.send(fileObj)
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
 app.post('/users', (req, res) => {
   var person = req.body;
-
-  var fileStr = readFile('./persons.json');
-  var fileObj = JSON.parse(fileStr);
   //obter tamanho de um objeto json
   var size = Object.keys(fileObj).length;
-  fileObj.person4 = person;
-  person.id = ++size;
+  size++;
+  person.id = size;
+  fileObj["person"+person.id] = person;
 
- 
-  res.send(JSON.stringify(fileObj));
+  res.send(person.id + "");
 })
 
 
-app.delete('/users', (req, res) => {
-  res.send('hello, delete ')
+app.delete('/users/:id', (req, res) => {
+  var id = req.params.id;
+  var person = fileObj["person" + id];
+
+  if (person != undefined){
+    delete fileObj["person" + id];
+    res.send("Id: " + id + "was deleted")
+  }
+  else{
+    res.send("Id does not exis");
+  }
+})
+
+app.get('/users/:id', (req, res) => {
+  var id = req.params.id;
+  var person = fileObj["person" + id];
+
+  if (person != undefined){
+    res.send(person);
+  }
+  else{
+    res.send("Id does not exist");
+  }
 })
 
 app.put('/users', (req, res) => {
   res.send('hello, put ')
 })
 
-app.get('/users', (req, res) => {
-  var file = readFile('./persons.json');
-  res.send(file)
-})
 
 
+var fileStr = readFile('./persons.json');
+var fileObj = JSON.parse(fileStr);
