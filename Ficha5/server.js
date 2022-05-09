@@ -64,8 +64,21 @@ app.get('/users/:id', (req, res) => {
   }
 })
 
-app.put('/users', (req, res) => {
-  res.send('hello, put ')
+app.put('/users/:id', (req, res) => {
+  var id = req.params.id;
+  var personBody = req.body;
+  var person = fileObj['person' + id];
+
+  if (person != undefined){
+    personBody.id = id;
+    fileObj['person' + id] = personBody;
+    res.send(personBody);
+  }
+  else {
+    res.send("this id does not exist")
+  }
+
+  res.send('this is the id ' + body.id)
 })
 
 
