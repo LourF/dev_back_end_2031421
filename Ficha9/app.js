@@ -1,7 +1,7 @@
-const { req, res, query, response, request } = require('express');
+const { request } = require('express');
 const express = require('express');
-const mysql = require('mysql2');
 const { Sequelize, Model, DataTypes } = require('sequelize');
+const { readEndpointFile } = require('swagger-autogen/src/handle-files');
 const swaggerUi = require('swagger-ui-express');
 
 // instanciar o express
@@ -142,38 +142,58 @@ app.get('/person/id', (req, res) => {
     if (isNaN(id)) {
         res.status(400).send("Invalid id supplied");
     } else {
-        Project.findByPk(
-            {
-                where: {
-                    id: id
-                }
-            }
+        Person.findByPk(id)
                 .then(result => {
                     if (result == 0) {
                         res.status(404).send("Cannot find id");
                     }
                     else {
-                        res.send("Number of deleted instances: " + result)
+                        res.send(result)
                     }
-                })
+                }
         )
     }
 })
 
-app.get('person/:age/:profession/', (req, res) => {
+app.get('/person/:age/:profession', (req, res) => {
     Person.findAll({
-        where: {
-            age: request.params.age,
-            profession: request.params.profession,
+        where: { 
+            profession: req.params.profession,
+            age: req.params.age
+           
             
         }
     })
     .then(result => {
         if (result == 0){
-            response.send("Cannot find id with profession");
+            res.send("Cannot find id with profession");
         }
         else{
             res.send(result);
+        }
+    })
+})
+
+app.put('/person/:id', (req, res) => {
+    Person.update(req.body, {
+        where: { 
+            id: req.params.id 
+        }
+    })
+    .then(result => {
+        if (result == 0){
+            res.send("Cannot find id with profession");
+        }
+        else{
+            Person.findAll({
+                where: {
+                    id: req.params.id
+                }
+            })
+            .then(result =>{
+                res.send(result);
+            })
+            
         }
     })
 })
