@@ -1,9 +1,10 @@
-
 const Sequelize = require('sequelize');
 const PersonModel = require ('./models/person')
+const InvoiceModel = require ('./models/invoice')
 
 
 const sequelize = new Sequelize('ficha9', 'root', '', {
+
     dialect: 'mysql'
 });
 
@@ -16,6 +17,7 @@ sequelize.authenticate()
     });
 
 const Person = PersonModel(sequelize,Sequelize);
+const Invoice = InvoiceModel(sequelize,Sequelize);
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -24,4 +26,9 @@ sequelize.sync({ force: false })
         return Person.findAll();
     }).then(function (Persons) {
         console.log(Persons);
-    })
+    });
+
+module.exports = {
+    Person,
+    Invoice
+}

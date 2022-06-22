@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) =>{
-sequelize.define('persons', {
+return sequelize.define('persons', {
     firstName: type.TEXT,
     lastName: type.TEXT,
     profession: type.STRING,
